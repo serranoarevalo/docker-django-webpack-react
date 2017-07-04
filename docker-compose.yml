@@ -1,0 +1,26 @@
+version: "2"
+
+services:
+ db:
+  image: postgres:9.6
+  environment:
+   - POSTGRES_DB=mydb
+   - POSTGRES_USER=example
+   - POSTGRES_PASSWORD=secret
+   - PGDATA=/var/lib/postgresql/data/pgdata
+  volumes:
+   - db_data:/var/lib/postgresql/data/pgdata
+
+ web:
+   build: ./webapp
+   command: python manage.py runserver 0.0.0.0:8000
+   volumes:
+    - ./webapp:/webapp
+   ports:
+    - "8000:8000"
+   depends_on:
+    - db
+
+volumes:
+ db_data:
+  external: true
